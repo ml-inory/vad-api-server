@@ -15,7 +15,7 @@ mic = Mic(1, 16000)
 model = SileroOrt(MODEL_PATH)
 prob_thresh = 0.2
 window_size_samples = 512
-record_duration = 0.5
+record_duration = 1.0
 speech_continue_ms = 1000
 
 audio_chunks = []
