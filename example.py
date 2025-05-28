@@ -1,10 +1,6 @@
 BACKEND = "ORT"
-if BACKEND == "AX":
-    MODEL_PATH = "./silero_vad.axmodel"
-    from SileroAx import SileroAx as Silero
-else:
-    MODEL_PATH = "./silero_vad.onnx"
-    from SileroOrt import SileroOrt as Silero
+MODEL_PATH = "./silero_vad.onnx"
+from SileroOrt import SileroOrt as Silero
 
 from utils_vad import *
 from pprint import pprint
