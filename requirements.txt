@@ -3,3 +3,4 @@ onnxruntime==1.19
 librosa==0.10.1
 soundfile
 sounddevice
+pyaudio
