@@ -13,7 +13,7 @@ os.makedirs("mic_silero_test", exist_ok=True)
 mic = Mic(1, 16000)
 
 model = SileroOrt(MODEL_PATH)
-prob_thresh = 0.5
+prob_thresh = 0.2
 window_size_samples = 512
 record_duration = 0.5
 speech_continue_ms = 1000
@@ -45,7 +45,7 @@ while True:
     if len(audio_with_speech) == 0:
         start_time = datetime.now().strftime("%Y%m%d%H%M%S")
     
-    speech_timestamps = get_speech_timestamps(audio, model, sampling_rate=mic.sample_rate)
+    speech_timestamps = get_speech_timestamps(audio, model, threshold=prob_thresh, sampling_rate=mic.sample_rate)
     print(speech_timestamps)
     if len(speech_timestamps) > 0:
         print(f'start: {speech_timestamps[0]["start"]}  end: {speech_timestamps[-1]["end"]}')
