@@ -1,11 +1,11 @@
 MODEL_PATH = "./silero_vad.onnx"
 from SileroOrt import SileroOrt
-from utils_vad import *
 from mic import Mic
 import os
 from datetime import datetime
 import soundfile as sf
 import pyaudio
+import numpy as np
 import time
 
 os.makedirs("mic_silero_test", exist_ok=True)
@@ -21,9 +21,8 @@ device_index = int(input("Enter the index of the microphone to use: "))
 mic = Mic(1, 16000)
 
 model = SileroOrt(MODEL_PATH)
-prob_thresh = 0.2
+prob_thresh = 0.5
 window_size_samples = 512
-record_duration = 0.5
 speech_continue_ms = 1000
 
 audio_chunks = []
@@ -45,6 +44,8 @@ while True:
     while audio_chunks_len < window_size_samples:
         continue
 
+    # print(f"audio_chunks_len: {audio_chunks_len}")
+
     if len(audio_chunks) > 1:
         audio = np.concatenate(audio_chunks, axis=-1)
     else:
@@ -55,8 +56,6 @@ while True:
     if len(audio_with_speech) == 0:
         start_time = datetime.now().strftime("%Y%m%d%H%M%S")
     
-    # speech_timestamps = get_speech_timestamps(audio, model, threshold=prob_thresh, sampling_rate=mic.sample_rate)
-    # print(speech_timestamps)
     speech_probs = []
     real_width = len(audio)
     padded_width = int(np.ceil(len(audio) / window_size_samples) * window_size_samples)
@@ -86,5 +85,7 @@ while True:
 
                     audio_with_speech = []
                     silence_ms = 0
+                    audio_chunks = []
+                    audio_chunks_len = 0
                 else:
                     audio_with_speech.append(chunk)
